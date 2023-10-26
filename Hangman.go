@@ -9,14 +9,8 @@ import (
 	"time"
 )
 
-func Run() {
-	if len(os.Args) != 2 {
-		fmt.Println("Usage: hangman <filename>")
-		return
-	}
-
-	filename := os.Args[1]
-	wordList, err := readWordList(filename)
+func PlayHangman(wordFile string) {
+	wordList, err := readWordList(wordFile)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -27,13 +21,14 @@ func Run() {
 
 	attempts := 10
 	revealedLetters := make([]bool, len(word))
-	revealLetters(word, revealedLetters)
+	revealRandomLetters(word, revealedLetters)
 
 	reader := bufio.NewReader(os.Stdin)
 	guess := ""
 
 	for attempts > 0 {
 		displayWord(word, revealedLetters)
+
 		fmt.Printf("Attempts left: %d\n", attempts)
 		fmt.Print("Enter a letter: ")
 		guess, _ = reader.ReadString('\n')
@@ -77,13 +72,11 @@ func readWordList(filename string) ([]string, error) {
 	return words, scanner.Err()
 }
 
-// Select a random word from the list
 func selectRandomWord(wordList []string) string {
 	randIndex := rand.Intn(len(wordList))
 	return wordList[randIndex]
 }
 
-// Display the word with revealed letters
 func displayWord(word string, revealedLetters []bool) {
 	for i, char := range word {
 		if revealedLetters[i] {
@@ -95,7 +88,6 @@ func displayWord(word string, revealedLetters []bool) {
 	fmt.Println()
 }
 
-// Reveal a letter in the word
 func revealLetter(word string, revealedLetters []bool, letter string) {
 	for i, char := range word {
 		if string(char) == letter {
@@ -104,8 +96,7 @@ func revealLetter(word string, revealedLetters []bool, letter string) {
 	}
 }
 
-// Reveal some initial letters in the word
-func revealLetters(word string, revealedLetters []bool) {
+func revealRandomLetters(word string, revealedLetters []bool) {
 	numToReveal := len(word)/2 - 1
 	for i := 0; i < numToReveal; i++ {
 		for {
@@ -118,12 +109,10 @@ func revealLetters(word string, revealedLetters []bool) {
 	}
 }
 
-// Check if a string is a single letter
 func isLetter(str string) bool {
 	return len(str) == 1 && str >= "a" && str <= "z"
 }
 
-// Check if the entire word is found
 func wordFound(revealedLetters []bool) bool {
 	for _, revealed := range revealedLetters {
 		if !revealed {
