@@ -9,104 +9,126 @@ import (
 	"time"
 )
 
-func PlayHangman() {
-	word := chooseWord()
-	revealedWord := revealLetters(word)
-	attempts := 10
-	guessedLetters := make(map[rune]bool)
+func Run() {
+	if len(os.Args) != 2 {
+		fmt.Println("Usage: hangman <filename>")
+		return
+	}
 
-	fmt.Printf("Word: %s\n", revealedWord)
+	filename := os.Args[1]
+	wordList, err := readWordList(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	word := selectRandomWord(wordList)
+
+	attempts := 10
+	revealedLetters := make([]bool, len(word))
+	revealLetters(word, revealedLetters)
+
+	reader := bufio.NewReader(os.Stdin)
+	guess := ""
 
 	for attempts > 0 {
-		fmt.Print("Guess a letter: ")
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		if len(input) != 1 || !isLetter(input) {
+		displayWord(word, revealedLetters)
+		fmt.Printf("Attempts left: %d\n", attempts)
+		fmt.Print("Enter a letter: ")
+		guess, _ = reader.ReadString('\n')
+		guess = strings.TrimSpace(guess)
+
+		if len(guess) != 1 || !isLetter(guess) {
 			fmt.Println("Invalid input. Please enter a single letter.")
 			continue
 		}
-		letter := []rune(input)[0]
 
-		if guessedLetters[letter] {
-			fmt.Printf("You've already guessed the letter '%c'.\n", letter)
-			continue
-		}
+		if strings.Contains(word, guess) {
+			fmt.Println("Correct guess!")
+			revealLetter(word, revealedLetters, guess)
 
-		guessedLetters[letter] = true
-
-		if strings.ContainsRune(word, letter) {
-			fmt.Printf("Good guess! '%c' is in the word.\n", letter)
-			revealedWord = reveal(word, revealedWord, letter)
+			if wordFound(revealedLetters) {
+				fmt.Printf("Congratulations! You've found the word: %s\n", word)
+				return
+			}
 		} else {
+			fmt.Println("Incorrect guess!")
 			attempts--
-			fmt.Printf("Wrong guess! Attempts left: %d\n", attempts)
-		}
-
-		fmt.Printf("Word: %s\n", revealedWord)
-
-		if revealedWord == word {
-			fmt.Printf("Congratulations! You found the word: %s\n", word)
-			break
 		}
 	}
 
-	if revealedWord != word {
-		fmt.Printf("Out of attempts. The word was: %s\n", word)
-	}
+	fmt.Printf("You lose. The correct word was: %s\n", word)
 }
 
-func isLetter(s string) bool {
-	r := []rune(s)
-	return len(r) == 1 && (r[0] >= 'a' && r[0] <= 'z' || r[0] >= 'A' && r[0] <= 'Z')
-}
-
-func chooseWord() string {
-	file, err := os.Open("words.txt")
+func readWordList(filename string) ([]string, error) {
+	file, err := os.Open(filename)
 	if err != nil {
-		fmt.Println("Error opening the file:", err)
-		os.Exit(1)
+		return nil, err
 	}
 	defer file.Close()
 
-	words := make([]string, 0)
+	var words []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		words = append(words, scanner.Text())
 	}
 
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error reading the file:", err)
-		os.Exit(1)
-	}
-
-	rand.Seed(time.Now().UnixNano())
-	return words[rand.Intn(len(words))]
+	return words, scanner.Err()
 }
 
-func revealLetters(word string) string {
-	n := len(word)/2 - 1
-	revealedWord := make([]byte, len(word))
-	for i := range revealedWord {
-		revealedWord[i] = '_'
-	}
-	for i := 0; i < int(n); i++ {
-		index := rand.Intn(len(word))
-		if revealedWord[index] == '_' {
-			revealedWord[index] = word[index]
-		}
-	}
-	return string(revealedWord)
+// Select a random word from the list
+func selectRandomWord(wordList []string) string {
+	randIndex := rand.Intn(len(wordList))
+	return wordList[randIndex]
 }
 
-func reveal(word, revealed string, letter rune) string {
-	revealedBytes := []byte(revealed)
-	wordBytes := []byte(word)
-
-	for i, c := range wordBytes {
-		if c == byte(letter) {
-			revealedBytes[i] = byte(letter)
+// Display the word with revealed letters
+func displayWord(word string, revealedLetters []bool) {
+	for i, char := range word {
+		if revealedLetters[i] {
+			fmt.Printf("%c", char)
+		} else {
+			fmt.Print("_")
 		}
 	}
-	return string(revealedBytes)
+	fmt.Println()
+}
+
+// Reveal a letter in the word
+func revealLetter(word string, revealedLetters []bool, letter string) {
+	for i, char := range word {
+		if string(char) == letter {
+			revealedLetters[i] = true
+		}
+	}
+}
+
+// Reveal some initial letters in the word
+func revealLetters(word string, revealedLetters []bool) {
+	numToReveal := len(word)/2 - 1
+	for i := 0; i < numToReveal; i++ {
+		for {
+			index := rand.Intn(len(word))
+			if !revealedLetters[index] {
+				revealedLetters[index] = true
+				break
+			}
+		}
+	}
+}
+
+// Check if a string is a single letter
+func isLetter(str string) bool {
+	return len(str) == 1 && str >= "a" && str <= "z"
+}
+
+// Check if the entire word is found
+func wordFound(revealedLetters []bool) bool {
+	for _, revealed := range revealedLetters {
+		if !revealed {
+			return false
+		}
+	}
+	return true
 }
