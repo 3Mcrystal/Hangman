@@ -39,37 +39,45 @@ func revealRandomLetters(word string, count int) string {
 }
 
 func (h *Hangman) Play() {
-	fmt.Println("Good Luck, you have 10 attempts.")
+	fmt.Println("Good Luck, you have", h.Attempts, "attempts.")
 	fmt.Println(h.DisplayWord)
 
-	incorrectGuesses := make(map[string]bool) // Keep track of incorrect guesses
+	incorrectGuesses := make(map[string]bool)
 
 	for h.Attempts > 0 {
 		fmt.Print("Choose: ")
 		guess := readGuess()
 		guess = strings.TrimSpace(guess)
 
-		if len(guess) != 1 {
-			fmt.Println("Please enter a single letter.")
-			continue
-		}
-
-		if strings.Contains(h.WordToGuess, guess) {
-			h.DisplayWord = updateDisplayWord(h.WordToGuess, h.DisplayWord, guess)
-			fmt.Println(h.DisplayWord)
-			if h.DisplayWord == h.WordToGuess {
-				fmt.Println("Congrats!")
-				return
-			}
-		} else {
+		if len(guess) == 1 {
 			if _, exists := incorrectGuesses[guess]; exists {
-				fmt.Printf("You've already guessed '%s' incorrectly.\n", guess)
+				fmt.Printf("You've already guessed the letter '%s' incorrectly.\n", guess)
+				continue
+			}
+
+			if strings.Contains(h.WordToGuess, guess) {
+				h.DisplayWord = updateDisplayWord(h.WordToGuess, h.DisplayWord, guess)
+				fmt.Println(h.DisplayWord)
+				if h.DisplayWord == h.WordToGuess {
+					fmt.Println("Congrats!")
+					return
+				}
 			} else {
-				incorrectGuesses[guess] = true // Record incorrect guess
+				incorrectGuesses[guess] = true
 				h.Attempts--
 				displayHangman(h.HangmanPositions, h.Attempts)
 				fmt.Printf("Not present in the word, %d attempts remaining\n", h.Attempts)
 			}
+		} else if len(guess) >= 2 {
+			if guess == h.WordToGuess {
+				fmt.Println("Congrats! You've guessed the word correctly.")
+				return
+			} else {
+				h.Attempts -= 2
+				fmt.Printf("Incorrect word guess, %d attempts remaining\n", h.Attempts)
+			}
+		} else {
+			fmt.Println("Please enter a valid single letter or word.")
 		}
 	}
 
