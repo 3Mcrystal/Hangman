@@ -1,8 +1,8 @@
 package hangman
 
-type HangManData struct {
-	Word             string
-	ToFind           string
+type Hangman struct {
+	WordToGuess      string
+	DisplayWord      string
 	Attempts         int
-	HangmanPositions [10]string
+	HangmanPositions []string
 }
