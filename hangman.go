@@ -8,10 +8,8 @@ import (
 
 func NewHangman(words []string, letterFile string) *Hangman {
 	wordToGuess := selectRandomWord(words)
-
 	revealCount := len(wordToGuess)/2 - 1
 	displayWord := revealRandomLetters(wordToGuess, revealCount)
-
 	return &Hangman{
 		WordToGuess:      wordToGuess,
 		DisplayWord:      displayWord,
@@ -21,7 +19,6 @@ func NewHangman(words []string, letterFile string) *Hangman {
 		GuessedLetters:   []rune{},
 	}
 }
-
 func revealRandomLetters(word string, count int) string {
 	if count <= 0 {
 		return strings.Repeat("_", len(word))
@@ -39,24 +36,19 @@ func revealRandomLetters(word string, count int) string {
 	}
 	return string(revealed)
 }
-
 func (h *Hangman) Play() {
 	fmt.Println("Good Luck, you have", h.Attempts, "attempts.")
 	fmt.Println(h.DisplayWord)
-
 	incorrectGuesses := make(map[string]bool)
-
 	for h.Attempts > 0 {
 		fmt.Print("Choose: ")
 		guess := readGuess()
 		guess = strings.TrimSpace(guess)
-
 		if len(guess) == 1 {
 			if _, exists := incorrectGuesses[guess]; exists {
 				fmt.Printf("You've already guessed the letter '%s' incorrectly.\n", guess)
 				continue
 			}
-
 			if strings.Contains(h.WordToGuess, guess) {
 				h.DisplayWord = updateDisplayWord(h.WordToGuess, h.DisplayWord, guess)
 				fmt.Println(h.DisplayWord)
@@ -82,10 +74,8 @@ func (h *Hangman) Play() {
 			fmt.Println("Please enter a valid single letter or word.")
 		}
 	}
-
 	fmt.Printf("Out of attempts. The word was: %s\n", h.WordToGuess)
 }
-
 func readGuess() string {
 	var guess string
 	fmt.Scanln(&guess)

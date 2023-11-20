@@ -1,5 +1,4 @@
 // In command.go
-
 package hangman
 
 import (
@@ -23,7 +22,6 @@ func ProcessCommand(game *Hangman) {
 		fmt.Println("Error reading command:", err)
 	}
 }
-
 func saveGame(game *Hangman) {
 	saveFile := "Save/save.txt"
 	saveData, err := json.Marshal(game)
@@ -31,24 +29,20 @@ func saveGame(game *Hangman) {
 		fmt.Println("Error encoding game data:", err)
 		return
 	}
-
 	err = os.WriteFile(saveFile, saveData, 0644)
 	if err != nil {
 		fmt.Println("Error saving game data:", err)
 	}
 }
-
 func LoadGame(filename string) (*Hangman, error) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-
 	var game Hangman
 	err = json.Unmarshal(content, &game)
 	if err != nil {
 		return nil, err
 	}
-
 	return &game, nil
 }

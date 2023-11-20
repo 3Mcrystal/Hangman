@@ -11,11 +11,9 @@ func main() {
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: go run main.go <filename> [--letterFile <letterFile>] [--startWith <saveFile>]")
 	}
-
 	filename := os.Args[1]
 	letterFile := ""
 	saveFile := ""
-
 	// Check command-line arguments
 	for i := 2; i < len(os.Args); i++ {
 		switch os.Args[i] {
@@ -35,9 +33,7 @@ func main() {
 			}
 		}
 	}
-
 	var game *hangman.Hangman
-
 	// Load game from save file if provided
 	if saveFile != "" {
 		game, err := hangman.LoadGame(saveFile)
@@ -55,16 +51,8 @@ func main() {
 		if err != nil {
 			log.Fatal("Failed to load words from file:", err)
 		}
-
 		game = hangman.NewHangman(words, letterFile)
 		fmt.Println("Good Luck, you have", game.Attempts, "attempts.")
 		game.Play()
 	}
-
-	letterMap, err := hangman.ReadLetterFile(game.LetterFile)
-	if err != nil {
-		log.Fatalf("Error reading the letter file: %v", err)
-	}
-
-	hangman.DisplayASCIIArt(game.WordToGuess, letterMap, game.GuessedLetters)
 }
