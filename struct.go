@@ -5,4 +5,6 @@ type Hangman struct {
 	DisplayWord      string
 	Attempts         int
 	HangmanPositions []string
+	LetterFile       string
+	GuessedLetters   []rune
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func NewHangman(words []string) *Hangman {
+func NewHangman(words []string, letterFile string) *Hangman {
 	wordToGuess := selectRandomWord(words)
 
 	revealCount := len(wordToGuess)/2 - 1
@@ -17,6 +17,8 @@ func NewHangman(words []string) *Hangman {
 		DisplayWord:      displayWord,
 		Attempts:         10,
 		HangmanPositions: readHangmanPositions(),
+		LetterFile:       letterFile,
+		GuessedLetters:   []rune{},
 	}
 }
 

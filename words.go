@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 func LoadWordsFromFile(filename string) ([]string, error) {
@@ -40,7 +41,7 @@ func updateDisplayWord(word, displayWord, guess string) string {
 		return displayWord
 	}
 
-	displayWordSlice := []rune(displayWord) // Use runes for string manipulation
+	displayWordSlice := []rune(displayWord)
 
 	for i := range word {
 		if i < len(displayWordSlice) && word[i:i+1] == guess {
@@ -49,4 +50,41 @@ func updateDisplayWord(word, displayWord, guess string) string {
 	}
 
 	return string(displayWordSlice)
+}
+
+func UniqueLetter(originalWord, revealedWord string, numRevealed int) string {
+	rand.Seed(time.Now().UnixNano())
+
+	revealedLetters := make(map[rune]struct{})
+	for _, r := range revealedWord {
+		if r != '_' {
+			revealedLetters[r] = struct{}{}
+		}
+	}
+
+	var unrevealedLetters []rune
+	for _, r := range revealedWord {
+		if r != '_' {
+			revealedLetters[r] = struct{}{}
+		}
+	}
+
+	randIndices := rand.Perm(len(unrevealedLetters))
+	revealedIndices := randIndices[:numRevealed]
+
+	for _, idx := range revealedIndices {
+		revealedWord = replaceAtIndex(revealedWord, unrevealedLetters[idx], '_')
+	}
+
+	return revealedWord
+}
+
+func replaceAtIndex(str string, replacement rune, index int) string {
+	if index < 0 || index >= len(str) {
+		return str
+	}
+
+	runes := []rune(str)
+	runes[index] = replacement
+	return string(runes)
 }
