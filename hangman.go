@@ -46,6 +46,9 @@ func (h *Hangman) Play() {
 		fmt.Print("Choose: ")
 		guess := readGuess()
 		guess = strings.TrimSpace(guess)
+		if guess == "STOP" {
+			break
+		}
 		if len(guess) == 1 {
 			if _, exists := incorrectGuesses[guess]; exists {
 				fmt.Printf("You've already guessed the letter '%s' incorrectly.\n", guess)
@@ -76,8 +79,14 @@ func (h *Hangman) Play() {
 			fmt.Println("Please enter a valid single letter or word.")
 		}
 	}
-	fmt.Printf("Out of attempts. The word was: %s\n", h.WordToGuess)
+	if h.Attempts <= 0 {
+		fmt.Printf("Out of attempts. The word was: %s\n", h.WordToGuess)
+	} else {
+		fmt.Println("Game Saved in Save/save.txt.")
+		saveGame(h)
+	}
 }
+
 func readGuess() string {
 	var guess string
 	fmt.Scanln(&guess)

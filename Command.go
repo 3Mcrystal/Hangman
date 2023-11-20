@@ -1,4 +1,3 @@
-// In command.go
 package hangman
 
 import (
@@ -22,6 +21,7 @@ func ProcessCommand(game *Hangman) {
 		fmt.Println("Error reading command:", err)
 	}
 }
+
 func saveGame(game *Hangman) {
 	saveFile := "Save/save.txt"
 	saveData, err := json.Marshal(game)
@@ -44,5 +44,9 @@ func LoadGame(filename string) (*Hangman, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("Game loaded from %s. You have %d attempts remaining.\n", filename, game.Attempts)
+	fmt.Println("Current word:", game.DisplayWord)
+
 	return &game, nil
 }
