@@ -8,17 +8,19 @@ import (
 
 func NewHangman(words []string, letterFile string) *Hangman {
 	wordToGuess := selectRandomWord(words)
+
 	revealCount := len(wordToGuess)/2 - 1
 	displayWord := revealRandomLetters(wordToGuess, revealCount)
+
 	return &Hangman{
 		WordToGuess:      wordToGuess,
 		DisplayWord:      displayWord,
 		Attempts:         10,
 		HangmanPositions: readHangmanPositions(),
 		LetterFile:       letterFile,
-		GuessedLetters:   []rune{},
 	}
 }
+
 func revealRandomLetters(word string, count int) string {
 	if count <= 0 {
 		return strings.Repeat("_", len(word))

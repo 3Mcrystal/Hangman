@@ -20,7 +20,7 @@ This is a simple hangman game implemented in Golang.
 ## Features
 
 - Word Variety
-- ASCII Art
+- ASCII Art (Not implemented)
 - Save and Resume
 - Random Word Selection
 
