@@ -19,8 +19,10 @@ This is a simple hangman game implemented in Golang.
     ```
 ## Features
 
+- Help command
 - Word Variety
 - ASCII Art (Not implemented)
+- TView (Not implemented)
 - Save and Resume
 - Random Word Selection
 
@@ -28,7 +30,12 @@ This is a simple hangman game implemented in Golang.
 
 Usage
 ```bash
-go run main.go <filename> [--letterFile <letterFile>]
+go run main/main.go <filename> [--letterFile <letterFile>]
+```
+
+Usage (for Help)
+``` bash
+go run main/main.go help
 ```
 
 Example (without ASCII art)
@@ -38,6 +45,6 @@ go run main/main.go words.txt
 
 Example (with ASCII art)
 ```bash
-go run main.go words.txt --letterFile standard.txt
+go run main/main.go words.txt --letterFile standard.txt
 ```
 

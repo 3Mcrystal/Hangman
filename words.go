@@ -53,7 +53,7 @@ func UniqueLetter(originalWord, revealedWord string, numRevealed int) string {
 	}
 
 	var unrevealedLetters []rune
-	for _, r := range originalWord { // <-- Fix the loop to use originalWord
+	for _, r := range originalWord {
 		if _, revealed := revealedLetters[r]; !revealed {
 			unrevealedLetters = append(unrevealedLetters, r)
 		}

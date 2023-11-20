@@ -5,16 +5,21 @@ import (
 	"hangman"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
+	if len(os.Args) == 2 && (strings.ToLower(os.Args[1]) == "help" || strings.ToLower(os.Args[1]) == "h") {
+		hangman.DisplayHelp()
+		return
+	}
+
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: go run main.go <filename> [--letterFile <letterFile>] [--startWith <saveFile>]")
 	}
 	filename := os.Args[1]
 	letterFile := ""
 	saveFile := ""
-	// Check command-line arguments
 	for i := 2; i < len(os.Args); i++ {
 		switch os.Args[i] {
 		case "--letterFile":
@@ -34,7 +39,6 @@ func main() {
 		}
 	}
 	var game *hangman.Hangman
-	// Load game from save file if provided
 	if saveFile != "" {
 		game, err := hangman.LoadGame(saveFile)
 		if err != nil {

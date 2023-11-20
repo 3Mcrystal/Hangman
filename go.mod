@@ -1,5 +1,6 @@
 module hangman
 
+<<<<<<< HEAD
 go 1.21.0
 
 require github.com/rivo/tview v0.0.0-20231115183240-7c9e464bac02
@@ -14,3 +15,6 @@ require (
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 )
+=======
+go 1.21.0
+>>>>>>> 72984f001a9b1d75134959562738043e4223d378
