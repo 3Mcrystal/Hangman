@@ -27,11 +27,11 @@ func LoadWordsFromFile(filename string) ([]string, error) {
 	}
 	return words, nil
 }
-func selectRandomWord(words []string) string {
+func SelectRandomWord(words []string) string {
 	randIndex := rand.Intn(len(words))
 	return words[randIndex]
 }
-func updateDisplayWord(word, displayWord, guess string) string {
+func UpdateDisplayWord(word, displayWord, guess string) string {
 	if len(word) != len(displayWord) {
 		return displayWord
 	}
@@ -67,7 +67,7 @@ func UniqueLetter(originalWord, revealedWord string, numRevealed int) string {
 	return revealedWord
 }
 
-func replaceAtIndex(str string, replacement rune, index int) string {
+func ReplaceAtIndex(str string, replacement rune, index int) string {
 	if index < 0 || index >= len(str) {
 		return str
 	}
