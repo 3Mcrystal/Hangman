@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func readHangmanPositions() []string {
+func ReadHangmanPositions() []string {
 	positions := make([]string, 10)
 	file, err := os.Open("hangman.txt")
 	if err != nil {
@@ -35,7 +35,7 @@ func readHangmanPositions() []string {
 	}
 	return positions
 }
-func displayHangman(positions []string, attempts int) {
+func DisplayHangman(positions []string, attempts int) {
 	if attempts >= 0 && attempts < 10 {
 		fmt.Print(positions[9-attempts])
 	}
