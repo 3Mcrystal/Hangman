@@ -21,7 +21,7 @@ func NewHangman(words []string, letterFile string) *Hangman {
 	}
 }
 
-func revealRandomLetters(word string, count int) string {
+func RevealRandomLetters(word string, count int) string {
 	if count <= 0 {
 		return strings.Repeat("_", len(word))
 	}
@@ -87,7 +87,7 @@ func (h *Hangman) Play() {
 	}
 }
 
-func readGuess() string {
+func ReadGuess() string {
 	var guess string
 	fmt.Scanln(&guess)
 	return strings.TrimSpace(guess)
