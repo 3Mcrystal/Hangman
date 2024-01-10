@@ -1,0 +1,33 @@
+package hangman
+
+import (
+	"bufio"
+	"log"
+	"math/rand"
+	"os"
+	"time"
+)
+
+func RandoWord(pathFile string) string {
+	pathFile = "words-files/" + pathFile
+	file, err := os.Open(pathFile)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	scanner := bufio.NewScanner(file)
+
+	var wordsTable []string
+
+	for scanner.Scan() {
+		wordsTable = append(wordsTable, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	randSource := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return wordsTable[randSource.Intn(len(wordsTable))]
+}
